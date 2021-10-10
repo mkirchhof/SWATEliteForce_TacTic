@@ -129,6 +129,8 @@ latent function Escape()
 	local Pawn CurrentEnemy;
 	CurrentEnemy = ISwatEnemy(m_Pawn).GetEnemyCommanderAction().GetCurrentEnemy();
 
+    ISwatEnemy(m_Pawn).SetCurrentState(EnemyState_Flee);
+
 	// trigger the speech
 	ISwatEnemy(m_Pawn).GetEnemySpeechManagerAction().TriggerFleeSpeech();
 
@@ -167,6 +169,7 @@ latent function Escape()
     CurrentMoveToActorGoal.unPostGoal(self);
 	CurrentMoveToActorGoal.Release();
 	CurrentMoveToActorGoal = None;
+	ISwatEnemy(m_Pawn).SetCurrentState(EnemyState_Suspicious);
 }
 
 state Running

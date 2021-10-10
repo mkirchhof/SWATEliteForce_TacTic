@@ -55,16 +55,16 @@ function OnPawnIncapacitated(Pawn Pawn, Actor Incapacitator, bool WasAThreat)
         return; //the force was authorized
     }
 
-    // Armed enemies within a radius of 6 meters are a threat and non-deadly force is authorized
-    if (Pawn.IsA('SwatEnemy') && VSize(Pawn.Location - Incapacitator.Location) < 600)
+    //running close in front of an officer with a gun is considered a threat
+	if ( ISwatEnemy(Pawn).GetCurrentState() == EnemyState_Flee )
     {
-        if (GetGame().DebugLeadership)
-            log("[LEADERSHIP] "$class.name
-                $"::OnPawnIncapacitated() did *not* add "$Pawn.name
-                $" to its list of IncapacitatedEnemies because the SwatEnemy was a threat (so the force was authorized).");
-
-        return; //the force was authorized
-    }
+		//GetGame().PenaltyTriggeredMessage(Pawn(Killer) , "Enemy flee");
+		if ( VSize(Pawn.Location - Incapacitator.Location) < 1000  && !ISwatEnemy(Pawn).GetEnemyCommanderAction().HasFledWithoutUsableWeapon()  )
+		{
+			//GetGame().PenaltyTriggeredMessage(Pawn(Killer) , "Enemy flee: no penalty");
+			return;
+		}
+	}
 
     if( !Incapacitator.IsA('SwatPlayer') && Pawn(Incapacitator).GetActiveItem().GetSlot() != Slot_Detonator && !Incapacitator.IsA('SniperPawn'))
     {
