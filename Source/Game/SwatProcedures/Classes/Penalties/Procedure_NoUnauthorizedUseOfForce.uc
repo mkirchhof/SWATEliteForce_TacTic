@@ -55,6 +55,17 @@ function OnPawnIncapacitated(Pawn Pawn, Actor Incapacitator, bool WasAThreat)
         return; //the force was authorized
     }
 
+    // Armed enemies within a radius of 6 meters are a threat and non-deadly force is authorized
+    if (Pawn.IsA('SwatEnemy') && VSize(Pawn.Location - Incapacitator.Location) < 600)
+    {
+        if (GetGame().DebugLeadership)
+            log("[LEADERSHIP] "$class.name
+                $"::OnPawnIncapacitated() did *not* add "$Pawn.name
+                $" to its list of IncapacitatedEnemies because the SwatEnemy was a threat (so the force was authorized).");
+
+        return; //the force was authorized
+    }
+
     if( !Incapacitator.IsA('SwatPlayer') && Pawn(Incapacitator).GetActiveItem().GetSlot() != Slot_Detonator && !Incapacitator.IsA('SniperPawn'))
     {
         if (GetGame().DebugLeadership)

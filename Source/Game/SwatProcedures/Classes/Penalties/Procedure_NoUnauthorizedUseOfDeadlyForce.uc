@@ -38,6 +38,17 @@ function OnPawnDied(Pawn Pawn, Actor Killer, bool WasAThreat)
         return; //the deadly force was authorized
     }
 
+    // Armed enemies within a radius of 3 meters are a threat and deadly force is authorized
+    if (Pawn.IsA('SwatEnemy') && !ISwatAI(Pawn).IsArrested()  && VSize(Pawn.Location - Killer.Location) < 300)
+    {
+        if (GetGame().DebugLeadership)
+            log("[LEADERSHIP] "$class.name
+                $"::OnPawnDied() did *not* add "$Pawn.name
+                $" to its list of KilledEnemies because the SwatEnemy was a threat (so the deadly force was authorized).");
+
+        return; //the deadly force was authorized
+    }
+
     if( !Killer.IsA('SwatPlayer') && Pawn(Killer).GetActiveItem().GetSlot() != Slot_Detonator && !Killer.IsA('SniperPawn'))
     {
         if (GetGame().DebugLeadership)
