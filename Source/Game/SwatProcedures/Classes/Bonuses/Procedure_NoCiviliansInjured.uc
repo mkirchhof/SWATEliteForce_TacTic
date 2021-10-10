@@ -20,6 +20,9 @@ function OnPawnDamaged(Pawn Pawn, Actor Damager)
 {
     if (!Pawn.IsA('SwatHostage')) return;
 
+    // Allowed to use manual force on uncompliant pawns
+    if (!Pawn.IsCompliant() && Pawn.Health > 90) return;
+
     if (GetGame().DebugLeadership)
         log("[LEADERSHIP] "$class.name
             $" is setting AnyoneDamaged=true because PawnDamaged, Pawn="$Pawn.name$", Damager="$Damager.name$".");
